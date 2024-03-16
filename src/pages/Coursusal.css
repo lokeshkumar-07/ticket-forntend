@@ -1,0 +1,15 @@
+.react-multiple-carousel__arrow--right {
+    background-color: #ff0000; /* Change to your desired color */
+    width: 10px ; /* Set the width to your desired size */
+    height: 10px; /* Set the height to your desired size */
+    font-size: 12px;
+  }
+  
+  /* Previous button */
+  .react-multiple-carousel__arrow--left {
+    background-color: #ff0000; /* Change to your desired color */
+    color: #ff0000;
+    width: 20px; /* Set the width to your desired size */
+    height: 20px; /* Set the height to your desired size */
+    font-size: 12px;
+  }
