@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { myBookings } from '../features/bookingSlice'
+import Loading from '../components/Loading'
 
 const Bookings = () => {
     const dispatch = useDispatch()
     const { bookings } = useSelector((state) => state.bookings)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchBookings = async () => {
-            console.log('Getting Bookings')
-            await dispatch(myBookings())
-            setLoading(false)
-        }
+    console.log(bookings)
 
+    const fetchBookings = async () => {
+        await dispatch(myBookings())
+        setLoading(false)
+    }
+
+    useEffect(() => {
         fetchBookings()
-    }, [dispatch])
+    }, [])
 
     return (
         <div className='container'>
             {loading ? (
-                <p>Loading...</p>
+                <p><Loading /></p>
             ) : (
                 <>
                     

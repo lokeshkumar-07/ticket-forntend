@@ -9,6 +9,7 @@ import OAuth from '../components/OAuth'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Loading from '../components/Loading'
 
 const loginSchema = yup.object().shape({
     email: yup.string().required("Required").email("Invalid email"),
@@ -26,6 +27,8 @@ const Signin = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const [loading, setLoading] = useState(false)
+
 
   const roles = [
     "Patient",
@@ -42,19 +45,25 @@ const Signin = () => {
     formData.append("email", values.email.toLowerCase());
     formData.append("password", values.password);
     
+    setLoading(true)
     
-    dispatch(login(formData))
+    await dispatch(login(formData))
     .then((res) => {
       console.log(res)
       if(res.type === "auth/login/fulfilled"){
-        
+        setLoading(false)
         toast.success('Login SuccessFully')
         navigate('/')
       }
-      else{ toast.error(res.payload) }
+      else{ 
+        setLoading (false) 
+        toast.error(res.payload) 
+      }
       
     })
     .catch((err) => console.log(err))
+
+    setLoading(false)
   };
 
   return (
@@ -62,6 +71,7 @@ const Signin = () => {
       <div className="container">
         <div className="flex items-center flex-col">
           <h2 className="heading text-gray-600 text-center pb-4">Login Form</h2>
+          {loading && <Loading />}
           <div className="flex flex-col items-center mx-auto">
             <Formik
               onSubmit={loginMethod}

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { allShows, getOneShow } from '../features/showSlice';
 import { IoIosArrowBack } from 'react-icons/io';
+import Loading from '../components/Loading';
 
 const ShowsDisplay = () => {
 
@@ -12,6 +13,7 @@ const ShowsDisplay = () => {
   const {shows} = useSelector((state) => state.show);
   const {movie} = useSelector((state) => state.movie);
   const {movieName} = useParams();
+  const [loading, setLoading] = useState(true)
 
   const [date, setDate] = useState(new Date()); // Set initial state to today's date
   console.log(shows)
@@ -41,22 +43,19 @@ const ShowsDisplay = () => {
   console.log(datesArray)
 
 
-  const getMovieShows = () =>{
+  const getMovieShows = async() =>{
     const data = {
       movieName: movieName,
       date: date.toDateString(),
       city: city
     };
 
-    dispatch(allShows(data));
+    await dispatch(allShows(data));
+
+    setLoading(false);
   };
 
-  const getShow = () => {
-    const data = {
-        showId: showId
-    }
-    dispatch(getOneShow(data))
-  } 
+
 
   const handleShowClick = async(showId) => {
     const data = {
@@ -122,26 +121,27 @@ const ShowsDisplay = () => {
           </div>
 
           <div className='my-[15px]'>
-            { shows.length > 0 ? Object.entries(grouped).map(([theatreName, showings], index) => (
-              <div key={index} className='flex flex-col mb-[10px] md:flex-row md:items-center gap-2'>
-                <div className='w-[300px]'>
-                  <h1 className='text-gray-700 font-semibold'>{theatreName}</h1>
+            {loading ? (
+              <div><Loading /></div>
+            ) : shows.length > 0 ? (
+              Object.entries(grouped).map(([theatreName, showings], index) => (
+                <div key={index} className='flex flex-col mb-[10px] md:flex-row md:items-center gap-2'>
+                  <div className='w-[300px]'>
+                    <h1 className='text-gray-700 font-semibold'>{theatreName}</h1>
+                  </div>
+                  <div className='flex gap-2'>
+                    {showings.map((showing, subIndex) => (
+                      <div key={subIndex} className='flex flex-col items-center gap-[0px] hover:cursor-pointer px-8 py-2 border border-gray-400 rounded-md' onClick={() => handleShowClick(showing._id)}>
+                        <p className='text-green-500 text-[14px]'>{showing.startTime}</p>
+                        <p className='text-green-500 text-[12px]'>{showing.language}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className='flex gap-2'>
-                  {showings.map((showing, subIndex) => (
-                    <div key={subIndex} className='flex flex-col items-center gap-[0px] hover:cursor-pointer px-8 py-2 border border-gray-400 rounded-md'  onClick={() => handleShowClick(showing._id)}>
-                      <p className='text-green-500 text-[14px]'>{showing.startTime}</p>
-                      <p className='text-green-500 text-[12px]'>{showing.language}</p>
-                    </div>
-                  ))}
-                </div>
-                
-              </div>
-            ))
-               : (
-                <div className='text-gray-700 font-semibold'>No show Found on this day for this movie in this city.</div>
-              )   
-            }
+              ))
+            ) : (
+              <div className='text-gray-700 font-semibold'>No show Found on this day for this movie in this city.</div>
+            )}
           </div>
         </div>
       </div>

@@ -41,6 +41,8 @@ const Register = () => {
   const navigate = useNavigate();
   const {message} = useSelector((state) => state.auth)
 
+  const [loading, setLoading] = useState(false)
+
   const roles = ['Patient', 'Doctor'];
   const genders = ['Male', 'Female'];
 
@@ -107,18 +109,22 @@ const Register = () => {
     // }catch(err){
     //   console.log(err)
     // }
-
+    setLoading(true)
     await dispatch(register(formData))
     .then((res) => {
       if(res.type == "auth/register/fulfilled"){
+        setLoading(false)
         toast.success('Registration SuccessFully')
         navigate('/')
       }
-      else{ toast.error(res.payload) }
+      else{
+        setLoading(false) 
+        toast.error(res.payload) 
+      }
       
     })
     .catch((err) => console.log(err))
-    
+    setLoading(false)
   }
   
 

@@ -115,7 +115,7 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center gap-4">
-            <div className="flex items-center right gap-4">
+            <div className="flex items-center right ml-2 gap-4">
                 <div className="flex gap-2 items-center hover:cursor-pointer text-[18px] font-semibold" onClick={() => setShowModal(true)}>
                   <h1>{city}</h1>
                   <IoIosArrowDown />
@@ -242,7 +242,7 @@ const Header = () => {
             </ul>
             <button
               onClick={() => setShowModal(false)}
-              className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md mt-4"
+              className="bg-red-400 text-white py-2 px-4 rounded-md mt-4"
             >
               Close
             </button>

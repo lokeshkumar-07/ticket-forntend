@@ -11,6 +11,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 import "./Coursusal.css"
+import Loading from '../components/Loading';
 
 const responsive = {
   superLargeDesktop: {
@@ -53,6 +54,7 @@ const Home = () => {
   const [languageCat, setlanguageCat] = useState([]);
   const [genre, setGenre] = useState([])
   const [search, setSearch] = useState("")
+  const [loading, setLoading] = useState(true)
 
   console.log(genre)
 
@@ -107,7 +109,7 @@ const Home = () => {
     setSuggestions([]);
   };
 
-  const getAllMovies = () => {
+  const getAllMovies = async () => {
     console.log("Movie showing")
     const data = {
       languageCat: languageCat,
@@ -115,7 +117,8 @@ const Home = () => {
       search: search
     }
     
-    dispatch(allMovies(data))
+    await dispatch(allMovies(data))
+    setLoading(false)
   }
 
   const getAllShows = () => {
@@ -244,31 +247,40 @@ const Home = () => {
                       <CiSearch className='font-bold text-lg hover:cursor-pointer' />
                   </div>
               </div>
-              {movies.length > 0 ? (
-                <div className='flex flex-wrap justify-center'>  
-                                                 
-                  {movies.map((movie, index) => (
-                      <div key={index} className='flex flex-col ml-2 justify-between bg-white border border-gray-300 rounded-md w-64 lg:w-80 xl:w-96 mx-4 my-4 p-4 hover:cursor-pointer' onClick={() => handleMovieClick(movie.title)}>
-                          <img src={movie.image} className='w-full h-48 object-cover rounded-md mb-4' alt={movie.title} />
-                          <div>
-                              <h1 className='text-[24px] font-bold text-gray-800 mb-2'>{movie.title}</h1>
-                              <div className=' mb-2'>
-                                {movie.language.map((item,index) => (
-                                  <span className='text-[16px] text-gray-500' key={index}>{item}{index !== movie.language.length - 1 && "/"}</span>
-                                ))}
-                              </div>
-                              {movie.genre.map((item,index) => (
-                                <span className='text-[16px] text-gray-500' key={index}>{item}{index !== movie.genre.length - 1 && "/"}</span>
-                              ))}
-                          </div>
+              <div>
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <div>
+                    {movies.length > 0 ? (
+                      <div className='flex flex-wrap justify-center'>  
+                                                      
+                        {movies.map((movie, index) => (
+                            <div key={index} className='flex flex-col ml-2 justify-between bg-white border border-gray-300 rounded-md w-64 lg:w-80 xl:w-96 mx-4 my-4 p-4 hover:cursor-pointer' onClick={() => handleMovieClick(movie.title)}>
+                                <img src={movie.image} className='w-full h-48 object-cover rounded-md mb-4' alt={movie.title} />
+                                <div>
+                                    <h1 className='text-[24px] font-bold text-gray-800 mb-2'>{movie.title}</h1>
+                                    <div className=' mb-2'>
+                                      {movie.language.map((item,index) => (
+                                        <span className='text-[16px] text-gray-500' key={index}>{item}{index !== movie.language.length - 1 && "/"}</span>
+                                      ))}
+                                    </div>
+                                    {movie.genre.map((item,index) => (
+                                      <span className='text-[16px] text-gray-500' key={index}>{item}{index !== movie.genre.length - 1 && "/"}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}    
                       </div>
-                  ))}    
-                </div>
-              ) : (
-                <div>
-                  <h1 className='text-[28px] font-bold'>NO Movie Found</h1>
-                </div>
-              )}
+                    ) : (
+                      <div>
+                        <h1 className='text-[28px] font-bold'>NO Movie Found</h1>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              
               
           </div>
         </div>
